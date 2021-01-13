@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToCart } from '../actions/cartActions';
+import { addToCart, removeFromCart } from '../actions/cartActions';
 import { Row, Col, Image, ListGroup, Form, Card, Button } from 'react-bootstrap';
 import Message from '../components/Message';
 
@@ -16,11 +16,11 @@ const CartScreen = ({ history, match, location }) => {
   const { cartItems } = cart;
 
   useEffect(() => {
-    dispatch(addToCart(productId, qty));
+    if (productId) dispatch(addToCart(productId, qty));
   }, [dispatch, productId, qty]);
 
   const removeFromCartHandler = (id) => {
-    console.log(id);
+    dispatch(removeFromCart(id));
   };
 
   const checkoutHandler = () => {
@@ -43,7 +43,7 @@ const CartScreen = ({ history, match, location }) => {
                   <Col md={2}>
                     <Image src={item.image} alt={item.name} fluid rounded />
                   </Col>
-                  <Col md={3}>
+                  <Col md={4}>
                     <Link to={`/product/${item.product}`}>{item.name}</Link>
                   </Col>
                   <Col md={2}>${item.price}</Col>
