@@ -48,6 +48,7 @@ const ProfileScreen = ({ history }) => {
       setMessage('Please enter email');
     } else {
       dispatch(updateUserProfile(name, email, password));
+      setMessage(null);
     }
   };
 
