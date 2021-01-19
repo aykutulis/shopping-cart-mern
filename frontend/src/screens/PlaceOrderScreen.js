@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Row, Col, ListGroup, Image, Card } from 'react-bootstrap';
 import CheckoutSteps from '../components/CheckoutSteps';
 import Message from '../components/Message';
+import { createOrder } from '../actions/orderActions';
 
-const PlaceOrderScreen = () => {
+const PlaceOrderScreen = ({ history }) => {
   const { cartItems, shippingAddress, paymentMethod } = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
 
   // Calculate Prices
   const addDecimals = (num) => {
@@ -21,8 +23,24 @@ const PlaceOrderScreen = () => {
 
   const totalPrice = (Number(itemsPrice) + Number(shippingPrice) + Number(taxPrice)).toFixed(2);
 
+  const { order, success, error } = useSelector((state) => state.orderCreate);
+
+  useEffect(() => {
+    if (success) return history.push(`/orders/${order._id}`);
+  }, [history, success, order]);
+
   const placeOrderHandler = () => {
-    console.log('Place Order');
+    dispatch(
+      createOrder({
+        orderItems: cartItems,
+        shippingAddress,
+        paymentMethod,
+        itemsPrice,
+        shippingPrice,
+        taxPrice,
+        totalPrice,
+      })
+    );
   };
 
   return (
@@ -100,6 +118,11 @@ const PlaceOrderScreen = () => {
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
+                {error && (
+                  <ListGroup.Item>
+                    <Message variant='danger'>{error}</Message>
+                  </ListGroup.Item>
+                )}
                 <Button type='button' block disabled={cartItems === 0} onClick={placeOrderHandler}>
                   Place Order
                 </Button>
