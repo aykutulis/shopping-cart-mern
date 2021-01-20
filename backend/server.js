@@ -25,6 +25,11 @@ app.get('/', (req, res, next) => {
 // Routes
 app.use('/api', routes);
 
+// PayPal
+app.get('/api/config/paypal', (req, res, next) => {
+  res.send(process.env.PAYPAL_CLIENT_ID);
+});
+
 // Not Found
 app.use(notFound);
 
