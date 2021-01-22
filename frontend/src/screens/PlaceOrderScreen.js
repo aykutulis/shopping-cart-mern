@@ -5,6 +5,7 @@ import { Button, Row, Col, ListGroup, Image, Card } from 'react-bootstrap';
 import CheckoutSteps from '../components/CheckoutSteps';
 import Message from '../components/Message';
 import { createOrder } from '../actions/orderActions';
+import { ORDER_CREATE_RESET } from '../constants/orderConstants';
 
 const PlaceOrderScreen = ({ history }) => {
   const { cartItems, shippingAddress, paymentMethod } = useSelector((state) => state.cart);
@@ -28,6 +29,8 @@ const PlaceOrderScreen = ({ history }) => {
   useEffect(() => {
     if (success) return history.push(`/order/${order._id}`);
   }, [history, success, order]);
+
+  useEffect(() => () => dispatch({ type: ORDER_CREATE_RESET }), [dispatch]);
 
   const placeOrderHandler = () => {
     dispatch(
