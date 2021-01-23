@@ -23,7 +23,6 @@ const getAccessToRoute = asyncHandler(async (req, res, next) => {
 
 const isAdmin = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user);
-  console.log(user);
   if (user && user.isAdmin) {
     next();
   } else {
