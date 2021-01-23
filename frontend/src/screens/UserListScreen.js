@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loading from '../components/Loading';
 import { listUsers } from '../actions/userActions';
+import { USER_LIST_RESET } from '../constants/userConstants';
 
 const UserListScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -26,6 +27,8 @@ const UserListScreen = ({ history }) => {
   const deleteHandler = (id) => {
     console.log('delete');
   };
+
+  useEffect(() => () => dispatch({ type: USER_LIST_RESET }), [dispatch]);
 
   return (
     <>
