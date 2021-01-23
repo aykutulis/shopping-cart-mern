@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import asyncHandler from 'express-async-handler';
+import User from '../models/userModel.js';
 
 const getAccessToRoute = asyncHandler(async (req, res, next) => {
   if (!(req.headers.authorization && req.headers.authorization.startsWith('Bearer '))) {
@@ -20,4 +21,15 @@ const getAccessToRoute = asyncHandler(async (req, res, next) => {
   });
 });
 
-export { getAccessToRoute };
+const isAdmin = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user);
+  console.log(user);
+  if (user && user.isAdmin) {
+    next();
+  } else {
+    res.status(403);
+    throw new Error('Not authorized as an admin');
+  }
+});
+
+export { getAccessToRoute, isAdmin };
