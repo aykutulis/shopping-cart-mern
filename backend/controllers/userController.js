@@ -113,4 +113,38 @@ const deleteUser = asyncHandler(async (req, res, next) => {
   }
 });
 
-export { authUser, getUserProfile, registerUser, updateUserProfile, getAllUsers, deleteUser };
+// @desc    Get user by id
+// @route   GET /api/users/:id
+// @access  Private/Admin
+const getUser = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+
+  if (!user) {
+    res.status(404);
+    throw new Error('User not found');
+  }
+
+  res.json(user);
+});
+
+// @desc    Update user
+// @route   PUT /api/users/:id
+// @access  Private/Admin
+const updateUser = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.params.id);
+
+  if (!user) {
+    res.status(404);
+    throw new Error('User not found');
+  }
+
+  user.name = req.body.name || user.name;
+  user.email = req.body.email || user.email;
+  if (req.body.isAdmin !== undefined) user.isAdmin = req.body.isAdmin;
+
+  const updatedUser = await user.save();
+
+  res.json(updatedUser);
+});
+
+export { authUser, getUserProfile, registerUser, updateUserProfile, getAllUsers, deleteUser, getUser, updateUser };

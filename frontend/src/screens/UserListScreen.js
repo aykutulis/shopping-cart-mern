@@ -27,13 +27,13 @@ const UserListScreen = ({ history }) => {
     }
   }, [dispatch, history, userInfo, successDelete]);
 
+  useEffect(() => () => dispatch({ type: USER_LIST_RESET }), [dispatch]);
+
   const deleteHandler = (id) => {
     if (window.confirm('Are you sure?')) {
       dispatch(deleteUser(id));
     }
   };
-
-  useEffect(() => () => dispatch({ type: USER_LIST_RESET }), [dispatch]);
 
   return (
     <>
