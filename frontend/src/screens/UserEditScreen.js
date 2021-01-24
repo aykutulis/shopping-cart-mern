@@ -5,7 +5,8 @@ import { Form, Button, Spinner } from 'react-bootstrap';
 import FormContainer from '../components/FormContainer';
 import Message from '../components/Message';
 import Loading from '../components/Loading';
-import { getUserDetails } from '../actions/userActions';
+import { getUserDetails, updateUser } from '../actions/userActions';
+import { USER_UPDATE_RESET } from '../constants/userConstants';
 
 const UserEditScreen = ({ history, match }) => {
   const userId = match.params.id;
@@ -19,18 +20,27 @@ const UserEditScreen = ({ history, match }) => {
   const userDetails = useSelector((state) => state.userDetails);
   const { loading, error, user } = userDetails;
 
+  const userUpdate = useSelector((state) => state.userUpdate);
+  const { loading: loadingUpdate, error: errorUpdate, success: successUpdate } = userUpdate;
+
+  const { userInfo } = useSelector((state) => state.userLogin);
+
   useEffect(() => {
-    if (!user.name || user._id !== userId) {
+    if (successUpdate || !userInfo) return history.push('/admin/userlist');
+    if (!user || !user.name || user._id !== userId) {
       dispatch(getUserDetails(userId));
     } else {
       setName(user.name);
       setEmail(user.email);
       setIsAdmin(user.isAdmin);
     }
-  }, [dispatch, userId, user]);
+  }, [dispatch, history, userId, user, userInfo, successUpdate]);
+
+  useEffect(() => () => dispatch({ type: USER_UPDATE_RESET }), [dispatch]);
 
   const submitHandler = (e) => {
     e.preventDefault();
+    dispatch(updateUser({ _id: userId, name, email, isAdmin }));
   };
 
   return (
@@ -40,6 +50,7 @@ const UserEditScreen = ({ history, match }) => {
       </Link>
       <FormContainer>
         <h1>Edit User</h1>
+        {errorUpdate && <Message variant='danger'>{errorUpdate}</Message>}
         {loading ? (
           <Loading />
         ) : error ? (
@@ -57,7 +68,9 @@ const UserEditScreen = ({ history, match }) => {
             <Form.Group controlId='isadmin'>
               <Form.Check type='checkbox' label='Is Admin' checked={isAdmin} onChange={(e) => setIsAdmin(e.target.checked)} />
             </Form.Group>
-            <Button type='submit'>Update</Button>
+            <Button type='submit' disabled={loadingUpdate}>
+              {loadingUpdate ? <Spinner as='span' animation='border' size='sm' role='status' aria-hidden='true' /> : 'Update'}
+            </Button>
           </Form>
         )}
       </FormContainer>
