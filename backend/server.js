@@ -1,4 +1,5 @@
 import express from 'express';
+import path from 'path';
 import dotenv from 'dotenv';
 import colors from 'colors';
 import connectDB from './config/db.js';
@@ -24,6 +25,10 @@ app.get('/', (req, res, next) => {
 
 // Routes
 app.use('/api', routes);
+
+// Static Routes
+const __dirname = path.resolve();
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // PayPal
 app.get('/api/config/paypal', (req, res, next) => {
