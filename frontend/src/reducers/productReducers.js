@@ -44,7 +44,7 @@ export const productDetailsReducer = (state = { product: { reviews: [] } }, acti
       return { loading: false, error: action.payload };
 
     case PRODUCT_DETAILS_RESET:
-      return {};
+      return { product: { reviews: [] } };
 
     default:
       return state;
