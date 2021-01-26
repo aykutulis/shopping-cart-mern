@@ -9,7 +9,14 @@ import {
   productUpdateReducer,
 } from './reducers/productReducers';
 import { cartReducer } from './reducers/cartReducers';
-import { orderCreateReducer, orderDetailsReducer, orderPayReducer, ordersOfUserReducer } from './reducers/orderReducers';
+import {
+  orderCreateReducer,
+  orderDeliverReducer,
+  orderDetailsReducer,
+  orderPayReducer,
+  ordersListReducer,
+  ordersOfUserReducer,
+} from './reducers/orderReducers';
 import {
   userDeleteReducer,
   userDetailsReducer,
@@ -37,7 +44,9 @@ const reducer = combineReducers({
   orderCreate: orderCreateReducer,
   orderDetails: orderDetailsReducer,
   orderPay: orderPayReducer,
+  orderDeliver: orderDeliverReducer,
   ordersOfUser: ordersOfUserReducer,
+  orderList: ordersListReducer,
 });
 
 const cartItemsFromStorage = localStorage.getItem('cartItems') ? JSON.parse(localStorage.getItem('cartItems')) : [];
