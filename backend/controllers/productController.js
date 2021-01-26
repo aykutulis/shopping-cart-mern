@@ -1,5 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import Product from '../models/productModel.js';
+import path from 'path';
+import fs from 'fs';
 
 // @desc    Fetch all products
 // @route   GET /api/products
@@ -30,6 +32,17 @@ const deleteProduct = asyncHandler(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
 
   if (product) {
+    const rootDir = path.resolve();
+
+    if (product.image !== '/images/sample.jpg') {
+      fs.unlink(path.join(rootDir, product.image), (err) => {
+        if (err) {
+          res.status(404);
+          next(err);
+        }
+      });
+    }
+
     await product.remove();
     res.json({ message: 'Product removed' });
   } else {
@@ -63,7 +76,8 @@ const createProduct = asyncHandler(async (req, res, next) => {
 // @route   PUT /api/products/:id
 // @access  Private/Admin
 const updateProduct = asyncHandler(async (req, res, next) => {
-  const { name, price, description, image, brand, category, countInStock } = req.body;
+  const { name, price, description, brand, category, countInStock } = req.body;
+  const image = `/uploads/${req.savedImage}`;
 
   const product = await Product.findById(req.params.id);
 
@@ -75,10 +89,23 @@ const updateProduct = asyncHandler(async (req, res, next) => {
   product.name = name;
   product.price = price;
   product.description = description;
-  product.image = image;
   product.brand = brand;
   product.category = category;
   product.countInStock = countInStock;
+  if (req.savedImage) {
+    const rootDir = path.resolve();
+
+    if (product.image !== '/images/sample.jpg') {
+      fs.unlink(path.join(rootDir, product.image), (err) => {
+        if (err) {
+          res.status(404);
+          next(err);
+        }
+      });
+    }
+
+    product.image = image;
+  }
 
   const updatedProduct = await product.save();
 

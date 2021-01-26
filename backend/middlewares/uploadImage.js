@@ -1,11 +1,11 @@
-const multer = require('multer');
-const path = require('path');
+import multer from 'multer';
+import path from 'path';
 
 // Storage
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const rootDir = path.dirname(require.main.filename);
-    cb(null, path.join(rootDir, '/uploads'));
+    const __dirrname = path.resolve();
+    cb(null, path.join(__dirrname, 'uploads'));
   },
   filename: function (req, file, cb) {
     const extension = file.mimetype.split('/')[1];

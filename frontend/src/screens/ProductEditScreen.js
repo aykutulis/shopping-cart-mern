@@ -13,7 +13,7 @@ const ProductEditScreen = ({ match, history }) => {
 
   const [name, setName] = useState('');
   const [price, setPrice] = useState(0);
-  const [image, setImage] = useState('');
+  const [image, setImage] = useState();
   const [brand, setBrand] = useState('');
   const [category, setCategory] = useState('');
   const [countInStock, setCountInStock] = useState(0);
@@ -37,7 +37,6 @@ const ProductEditScreen = ({ match, history }) => {
       } else {
         setName(product.name);
         setPrice(product.price);
-        setImage(product.image);
         setBrand(product.brand);
         setCategory(product.category);
         setCountInStock(product.countInStock);
@@ -50,18 +49,18 @@ const ProductEditScreen = ({ match, history }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(
-      updateProduct({
-        _id: productId,
-        name,
-        price,
-        image,
-        brand,
-        category,
-        description,
-        countInStock,
-      })
-    );
+
+    const formData = new FormData();
+
+    formData.append('name', name);
+    formData.append('price', price);
+    formData.append('image', image);
+    formData.append('brand', brand);
+    formData.append('category', category);
+    formData.append('description', description);
+    formData.append('countInStock', countInStock);
+
+    dispatch(updateProduct(formData, productId));
   };
 
   return (
@@ -90,13 +89,7 @@ const ProductEditScreen = ({ match, history }) => {
             </Form.Group>
 
             <Form.Group controlId='image'>
-              <Form.Label>Image</Form.Label>
-              <Form.Control
-                type='text'
-                placeholder='Enter image url'
-                value={image}
-                onChange={(e) => setImage(e.target.value)}
-              ></Form.Control>
+              <Form.File label='Choose File' custom onChange={(e) => setImage(e.target.files[0])} />
             </Form.Group>
 
             <Form.Group controlId='brand'>
