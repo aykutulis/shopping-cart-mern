@@ -2,6 +2,10 @@
 
 > eCommerce platform built with the MERN stack & Redux.
 
+## Demo
+
+Demo Link Heroku: https://shopping-mern-redux.herokuapp.com/
+
 ## Features
 
 - Full featured shopping cart
