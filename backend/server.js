@@ -24,22 +24,28 @@ if (process.env.NODE_ENV === 'development') {
 // Body Parser
 app.use(express.json());
 
-// Test Server
-app.get('/', (req, res, next) => {
-  res.send('API is running...');
-});
-
 // Routes
 app.use('/api', routes);
-
-// Static Routes
-const __dirname = path.resolve();
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // PayPal
 app.get('/api/config/paypal', (req, res, next) => {
   res.send(process.env.PAYPAL_CLIENT_ID);
 });
+
+// Static Routes
+const __dirname = path.resolve();
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'frontend', 'build')));
+
+  app.get('*', (req, res, next) => res.sendFile(path.join(__dirname, 'frontend', 'build', 'index.html')));
+} else {
+  // Test Server
+  app.get('/', (req, res, next) => {
+    res.send('API is running...');
+  });
+}
 
 // Not Found
 app.use(notFound);
