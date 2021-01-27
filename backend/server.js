@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'path';
 import dotenv from 'dotenv';
 import colors from 'colors';
+import morgan from 'morgan';
 import connectDB from './config/db.js';
 import routes from './routes/index.js';
 import { errorHandler, notFound } from './middlewares/errorMiddleware.js';
@@ -14,6 +15,11 @@ connectDB();
 
 // App
 const app = express();
+
+// Logger
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 
 // Body Parser
 app.use(express.json());
