@@ -7,12 +7,14 @@ import {
   deleteProduct,
   getAllProducts,
   getSingleProduct,
+  getTopProducts,
   updateProduct,
 } from '../controllers/productController.js';
 
 const router = express.Router();
 
 router.get('/', getAllProducts);
+router.get('/top', getTopProducts);
 router.get('/:id', getSingleProduct);
 router.delete('/:id', [getAccessToRoute, isAdmin], deleteProduct);
 router.post('/', [getAccessToRoute, isAdmin], createProduct);

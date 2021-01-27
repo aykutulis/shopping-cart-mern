@@ -7,6 +7,7 @@ import Product from '../components/Product';
 import Loading from '../components/Loading';
 import Message from '../components/Message';
 import Paginate from '../components/Paginate';
+import ProductCarousel from '../components/ProductCarousel';
 
 const HomeScreen = () => {
   const query = useQuery();
@@ -24,6 +25,7 @@ const HomeScreen = () => {
 
   return (
     <>
+      {keyword === '' && <ProductCarousel />}
       <h1>Latest Products</h1>
       {loading ? (
         <Loading />
