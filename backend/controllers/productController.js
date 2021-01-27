@@ -8,7 +8,16 @@ import fs from 'fs';
 // @route   GET /api/products
 // @access  Public
 const getAllProducts = asyncHandler(async (req, res, next) => {
-  const products = await Product.find({});
+  const keyword = req.query.keyword
+    ? {
+        name: {
+          $regex: req.query.keyword,
+          $options: 'i',
+        },
+      }
+    : {};
+
+  const products = await Product.find(keyword);
   res.json(products);
 });
 

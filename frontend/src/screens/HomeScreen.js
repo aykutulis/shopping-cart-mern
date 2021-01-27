@@ -6,14 +6,16 @@ import Product from '../components/Product';
 import Loading from '../components/Loading';
 import Message from '../components/Message';
 
-const HomeScreen = () => {
+const HomeScreen = ({ location }) => {
+  const keyword = location.search.split('=')[1] ? location.search.split('=')[1] : '';
+
   const dispatch = useDispatch();
   const productList = useSelector((state) => state.productList);
   const { products, loading, error } = productList;
 
   useEffect(() => {
-    dispatch(listProducts());
-  }, [dispatch]);
+    dispatch(listProducts(keyword));
+  }, [dispatch, keyword]);
 
   return (
     <>
