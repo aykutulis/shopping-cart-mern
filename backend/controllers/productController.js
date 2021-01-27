@@ -8,6 +8,9 @@ import fs from 'fs';
 // @route   GET /api/products
 // @access  Public
 const getAllProducts = asyncHandler(async (req, res, next) => {
+  const pageSize = Number(req.query.pageSize) || 8;
+  const pageNumber = Number(req.query.pageNumber) || 1;
+
   const keyword = req.query.keyword
     ? {
         name: {
@@ -17,8 +20,18 @@ const getAllProducts = asyncHandler(async (req, res, next) => {
       }
     : {};
 
-  const products = await Product.find(keyword);
-  res.json(products);
+  const count = await Product.countDocuments(keyword);
+  const pagesCount = Math.ceil(count / pageSize);
+
+  const products = await Product.find(keyword)
+    .limit(pageSize)
+    .skip(pageSize * (pageNumber - 1));
+
+  res.json({
+    products,
+    pageNumber,
+    pagesCount,
+  });
 });
 
 // @desc    Fetch single product
