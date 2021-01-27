@@ -57,7 +57,7 @@ const deleteProduct = asyncHandler(async (req, res, next) => {
   if (product) {
     const rootDir = path.resolve();
 
-    if (product.image !== '/images/sample.jpg') {
+    if (product.image !== '/uploads/sample.jpg') {
       fs.unlink(path.join(rootDir, product.image), (err) => {
         if (err) {
           res.status(404);
@@ -118,7 +118,7 @@ const updateProduct = asyncHandler(async (req, res, next) => {
   if (req.savedImage) {
     const rootDir = path.resolve();
 
-    if (product.image !== '/images/sample.jpg') {
+    if (product.image !== '/uploads/sample.jpg') {
       fs.unlink(path.join(rootDir, product.image), (err) => {
         if (err) {
           res.status(404);
