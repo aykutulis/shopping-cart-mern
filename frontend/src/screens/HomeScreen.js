@@ -1,13 +1,15 @@
 import React, { useEffect } from 'react';
 import { useQuery } from '../helpers/queryHelpers';
 import { useDispatch, useSelector } from 'react-redux';
-import { listProducts } from '../actions/productActions';
+import ProductCarousel from '../components/ProductCarousel';
 import { Row, Col } from 'react-bootstrap';
 import Product from '../components/Product';
 import Loading from '../components/Loading';
 import Message from '../components/Message';
 import Paginate from '../components/Paginate';
-import ProductCarousel from '../components/ProductCarousel';
+import Meta from '../components/Meta';
+import { listProducts } from '../actions/productActions';
+import { Link } from 'react-router-dom';
 
 const HomeScreen = () => {
   const query = useQuery();
@@ -25,7 +27,14 @@ const HomeScreen = () => {
 
   return (
     <>
-      {keyword === '' && <ProductCarousel />}
+      <Meta />
+      {keyword === '' ? (
+        <ProductCarousel />
+      ) : (
+        <Link to='/' className='btn btn-light'>
+          Go Back
+        </Link>
+      )}
       <h1>Latest Products</h1>
       {loading ? (
         <Loading />
